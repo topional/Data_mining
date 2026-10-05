@@ -41,127 +41,128 @@ Predicción del resultado de capacitaciones de servidores civiles en el Perú
 
 </div>
 
-## Resumen
+## Problema y alcance del TP1
 
-Este proyecto busca predecir si un servidor civil **aprobará o desaprobará** una capacitación de SERVIR, a partir de sus características y las de la capacitación, y entender qué factores se asocian al riesgo de no aprobar. Se trata de un problema de **clasificación binaria con desbalance severo de clases (~95/5)**, lo que obliga a evaluar con métricas distintas al accuracy.
+Anticipar el riesgo de **desaprobar o retirarse** de una capacitación de SERVIR/ENAP con información disponible al inscribirse. Una fila representa una participación, no necesariamente una persona única.
 
-El TP1 y el TF1 corresponden al mismo proyecto: el TP1 es el primer corte (problema, EDA, preparación, baseline y modelos preliminares) y el TF1 presenta la solución integrada, evaluada y desplegada.
+El archivo original contiene **83 930 filas × 20 columnas**, con 2 170 casos de riesgo (2,59 %). El modelamiento se limita a **36 681 participaciones de 198 ediciones con evaluación**, con 2 170 positivos (5,92 %). En esa población, `y=0` es APROBADO y `y=1` es DESAPROBADO/RETIRADO. Las participaciones acreditadas solo por asistencia se excluyen. El régimen se infiere de resultados históricos y debe confirmarse antes de uso real.
 
-## Contenido
+El TP1 compara un baseline y tres modelos preliminares con validación por edición. No es un despliegue ni una validación institucional de alertas.
 
-| Sección | Descripción | Documento |
-|---|---|---|
-| Definición del problema | Contexto, necesidad, unidad de análisis, pregunta y criterios de éxito | [docs/definicion-problema.md](docs/definicion-problema.md) |
-| Dataset y procedencia | Fuente, licencia, variables, limitaciones y justificación | [docs/dataset-y-procedencia.md](docs/dataset-y-procedencia.md) |
-| Decisiones de herramientas | Matriz de herramientas elegidas y alternativas | [docs/decisiones-herramientas.md](docs/decisiones-herramientas.md) |
-| Plan hacia el TF1 | Hallazgos, pendientes y próximos pasos | [docs/plan-hacia-tf1.md](docs/plan-hacia-tf1.md) |
-| Uso de IA generativa | Declaración de uso | [docs/uso-ia-generativa.md](docs/uso-ia-generativa.md) |
-| Análisis (EDA, calidad, modelos) | Notebooks ejecutados | [notebooks/](notebooks/) |
+## Documentación
 
-## 1. Problemática inicial
-
-- **Contexto:** SERVIR y la ENAP capacitan a servidores civiles de los tres niveles de gobierno, en distintas modalidades y en todo el país.
-- **Necesidad:** cada capacitación implica una inversión pública; si el participante no aprueba, no se obtiene una competencia certificada. Hoy no se sabe qué factores se asocian a ese riesgo.
-- **Unidad de análisis:** un registro de participación (un servidor en una capacitación).
-- **Pregunta principal:** ¿se puede predecir si un servidor civil aprobará o desaprobará una capacitación a partir de sus características y las de la capacitación, y qué factores se asocian más al riesgo de no aprobar?
-- **Tipo de problema:** clasificación binaria (`ESTADO_CAPACITACION`).
-- **Criterio de utilidad:** el modelo debe superar a un baseline en recall, F1 y PR-AUC de la clase minoritaria; el accuracy por sí solo no es criterio.
-
-Detalle completo en: [docs/definicion-problema.md](docs/definicion-problema.md)
-
-## 2. Dataset y procedencia
-
-| Campo | Detalle |
+| Documento | Contenido |
 |---|---|
-| Nombre | Reporte de Servidores Civiles Capacitados |
-| Publicador | Autoridad Nacional del Servicio Civil (SERVIR) |
-| Portal | Plataforma Nacional de Datos Abiertos del Perú |
-| Período | Diciembre 2025 – Mayo 2026 |
-| Tamaño | 83930 filas × 20 columnas |
-| Variable objetivo | `ESTADO_CAPACITACION` |
-| Licencia | Open Data Commons Attribution License (ODC-By) |
-| Enlace | https://www.datosabiertos.gob.pe/dataset/reporte-de-servidores-civiles-capacitados/resource/f403f2e4-1eae-4300-987a-8e7b5e11a1fe |
+| [Definición del problema](docs/definicion-problema.md) | Pregunta, objetivo, alcance y criterios |
+| [Dataset y procedencia](docs/dataset-y-procedencia.md) | Fuente, diccionario, licencia y población |
+| [Decisiones de herramientas](docs/decisiones-herramientas.md) | Elecciones y alternativas, vinculadas a semanas 3, 5 y 6 |
+| [Resultados y plan hacia el TF1](docs/plan-hacia-tf1.md) | Métricas ejecutadas, interpretación y pendientes |
+| [Uso de IA generativa](docs/uso-ia-generativa.md) | Alcance del apoyo técnico y responsabilidad |
 
-Los datos personales (`NRO_DOCUMENTO`, `BENEFICIARIO`) vienen anonimizados por el publicador. Variables, limitaciones y justificación en [docs/dataset-y-procedencia.md](docs/dataset-y-procedencia.md).
+## Estructura y orden de ejecución
 
-## Estructura del proyecto
-
-```
+```text
 Data_mining/
-├── data/
-│   ├── raw/             # CSV originales de SERVIR
-│   └── processed/       # datos tras limpieza y preparación
-├── notebooks/           # EDA, calidad de datos, baseline y modelos
-├── src/                 # código reutilizable (pipelines, utilidades)
-├── models/              # modelos entrenados
-├── reports/             # presentaciones y reportes
-├── docs/                # documentación detallada por sección
-├── README.md
+├── data/raw/                        # CSV original, fuera de git
+├── data/processed/                  # limpio, roles, particiones y predicciones; fuera de git
+├── notebooks/
+│   ├── 01_eda.ipynb                 # preguntas, gráficos y calidad
+│   ├── 02_preprocesamiento.ipynb     # limpieza y población
+│   ├── 03_separacion_datos.ipynb     # train/test y cinco folds por edición
+│   └── 04_modelamiento.ipynb        # pipeline, baseline, modelos y evaluación
+├── src/
+│   ├── utils/download_data.py       # descarga con respaldo y hash
+│   ├── modelamiento.py              # funciones reutilizables
+│   ├── ejecutar_notebooks.py        # ejecución con salidas visibles
+│   └── generar_entrega.py           # cierre, presentación PDF y guion
+├── models/                          # pipeline regenerable, fuera de git
+├── reports/figures/                 # gráficos del análisis y evaluación
+├── reports/metrics/                 # tablas CV/test y configuración
+├── reports/presentacion_tp1.pdf
+├── reports/guion_tp1.md
+├── docs/
+├── tests/
 └── requirements.txt
 ```
 
-## Cómo ejecutar el proyecto
+## Ejecutar en Arch Linux / Linux / macOS
 
-**Requisitos:** Python 3.13 (versión usada en el desarrollo), Git y conexión a internet para descargar el dataset (~20 MB).
+Se ejecutó y verificó con **Python 3.14.7**, scikit-learn 1.9.1 y pandas 3.0.6. Los notebooks originales se desarrollaron con Python 3.13. Se necesita internet para instalar dependencias y descargar los datos; después se trabaja localmente.
+
+Desde la raíz del repositorio `Data_mining`:
 
 ```bash
-# Clonar el repositorio
-git clone https://github.com/topional/Data_mining.git
-cd Data_mining
-
-# Crear y activar el entorno virtual
 python -m venv .venv
-.venv\Scripts\Activate.ps1        # Windows (PowerShell)
-# source .venv/bin/activate       # Linux / macOS
-
-# Instalar dependencias
-pip install -r requirements.txt
-
-# Descargar el dataset (se guarda en data/raw/)
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 python src/utils/download_data.py
-
-# Abrir los notebooks
 jupyter notebook notebooks/
 ```
 
-> **Windows:** si PowerShell bloquea la activación del entorno, ejecuta una vez
-> `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` y vuelve a intentarlo.
+Ejecutar los notebooks **01 → 02 → 03 → 04**, reiniciando el kernel y ejecutando todas las celdas en orden. En Windows se activa con `.venv\Scripts\Activate.ps1`.
 
-### Sobre la descarga de datos
-
-El script `src/utils/download_data.py`:
-
-1. Descarga el CSV desde el **portal oficial de Datos Abiertos** de SERVIR.
-2. Si el portal falla, usa una **copia de respaldo en Google Drive**.
-3. Verifica la integridad del archivo con **SHA-256**, de modo que todos trabajen con exactamente los mismos datos.
-4. Si el archivo ya existe en `data/raw/`, no lo vuelve a descargar. Usa `--force` para reemplazarlo:
+Para reproducir el flujo y regenerar la entrega desde terminal:
 
 ```bash
-python src/utils/download_data.py --force
+python src/ejecutar_notebooks.py
+python src/generar_entrega.py
 ```
 
-| Dato | Valor |
-|---|---|
-| Archivo | `Dataset_ENAP_RSCC_Dic_2025_May_2026.csv` |
-| Destino | `data/raw/` (ignorado por git) |
-| Fuente oficial | [Página del recurso](https://www.datosabiertos.gob.pe/dataset/reporte-de-servidores-civiles-capacitados/resource/f403f2e4-1eae-4300-987a-8e7b5e11a1fe) |
-| Respaldo | [Google Drive](https://drive.google.com/file/d/1jnBumWW9EzCBGUq41UP1m8_YVCm1zdVl/view) |
-| SHA-256 | `92360ae29b38caf41d73ce92dd9918136da242e616ca175f6c33b512b50b79df` |
-| Fecha de descarga | 03/10/2026 |
+El ejecutor utiliza IPython en el mismo proceso y guarda tablas, figuras y resultados en los notebooks, sin abrir un servidor. Respeta el código de las celdas. La ejecución tarda según el equipo; el forest usa dos trabajadores.
 
-## Estado del proyecto
+Para ejecutar solo modelamiento, una vez generados train y test:
 
-- [x] Definición del problema y dataset
-- [ ] EDA
-- [ ] Calidad y preparación de datos
-- [ ] Separación train/validation/test y pipeline
-- [ ] Baseline y modelos preliminares
-- [ ] Evaluación y plan hacia el TF1
+```bash
+python src/ejecutar_notebooks.py notebooks/04_modelamiento.ipynb
+python src/generar_entrega.py
+```
 
-## Uso de IA generativa
+Comprobaciones de comportamiento del pipeline:
 
-Se utilizaron herramientas de IA generativa como apoyo técnico. El detalle está en [docs/uso-ia-generativa.md](docs/uso-ia-generativa.md).
+```bash
+python -m unittest discover -s tests -v
+python -m pip check
+```
+
+## Descarga y trazabilidad de datos
+
+- Fuente: [Reporte de Servidores Civiles Capacitados](https://www.datosabiertos.gob.pe/dataset/reporte-de-servidores-civiles-capacitados/resource/f403f2e4-1eae-4300-987a-8e7b5e11a1fe).
+- Archivo: `Dataset_ENAP_RSCC_Dic_2025_May_2026.csv`, aproximadamente 20 MB.
+- Destino: `data/raw/`, ignorado por git.
+- Respaldo: [Google Drive](https://drive.google.com/file/d/1jnBumWW9EzCBGUq41UP1m8_YVCm1zdVl/view).
+- SHA-256: `92360ae29b38caf41d73ce92dd9918136da242e616ca175f6c33b512b50b79df`.
+
+El script comprueba el hash de una descarga nueva. Si el archivo ya existe, no lo vuelve a descargar ni revalida automáticamente. `python src/utils/download_data.py --force` descarga nuevamente.
+
+## Evaluación reproducible
+
+Train tiene 29 336 filas / 158 ediciones y test 7 345 / 40. Los cinco folds de train se conservan mediante `PredefinedSplit` de `FOLD`. Ninguna edición cruza train/test ni folds.
+
+Se comparan **DummyClassifier, regresión logística, árbol de decisión y random forest** mediante `ColumnTransformer` + `Pipeline`. La mediana, escala y categorías se aprenden únicamente con cada parte de entrenamiento. No se usan identificadores, estado final, edición, fold ni duración en días como predictoras.
+
+Se reportan accuracy, precision, recall, F1, balanced accuracy, **Average Precision (AP)** y ROC-AUC con media y desviación entre folds. AP es un resumen de precision–recall y no se confunde con integración trapezoidal.
+
+Se elige el modelo por AP media; después se fija el umbral por máximo F1 de OOF de train. La F1 ajustada OOF es desarrollo y tiene sesgo de selección. El test se lee después de fijar la decisión y no se utiliza para cambiarla. El resumen ejecutado está en [plan-hacia-tf1.md](docs/plan-hacia-tf1.md) y las tablas en [reports/metrics/](reports/metrics/).
+
+El pipeline exportado recibe las diez columnas preparadas; no incluye toda la limpieza administrativa del CSV crudo. Los scores ponderados no están calibrados.
+
+## Entregables y estado
+
+- [x] Puntos 1–5: problema, fuente, EDA, calidad y separación.
+- [x] Punto 6: flujo reproducible de preparación y clasificación.
+- [x] Punto 7: baseline ejecutado.
+- [x] Punto 8: al menos dos modelos (se comparan tres).
+- [x] Punto 9: evaluación preliminar e interpretación.
+- [x] Punto 10: hallazgos, limitaciones y plan TF1.
+- [x] Cuatro notebooks ejecutados, README y dependencias.
+- [x] [Presentación PDF](reports/presentacion_tp1.pdf) y [guion de 10 minutos](reports/guion_tp1.md).
+
+Los integrantes deben revisar las conclusiones, comprender el código, ensayar y proporcionar acceso al repositorio al docente. Esos pasos académicos no se sustituyen por la generación de archivos.
+
+## Limitaciones principales
+
+Población inferida de estados finales; identidades enmascaradas; EDA y decisiones administrativas con observación del dataset completo; 17 nombres de curso compartidos entre train/test; composición distinta por tipos; solo 110 retirados; scores no calibrados; falta validación temporal e institucional. Las asociaciones e importancias no son causas. Detalle y mejoras en el plan TF1.
 
 ## Licencia y atribución
 
-- **Datos:** © Autoridad Nacional del Servicio Civil (SERVIR), publicados en la Plataforma Nacional de Datos Abiertos bajo la [Open Data Commons Attribution License (ODC-By)](https://opendatacommons.org/licenses/by/1-0/).
+Datos: © Autoridad Nacional del Servicio Civil (SERVIR), Plataforma Nacional de Datos Abiertos, bajo [Open Data Commons Attribution License (ODC-By)](https://opendatacommons.org/licenses/by/1-0/).

@@ -109,3 +109,11 @@ Los datos personales vienen **anonimizados** por el publicador: `NRO_DOCUMENTO` 
 - **Reto metodológico relevante:** el desbalance muy severo permite demostrar, con evidencia, por qué el *accuracy* es engañoso y por qué se necesitan métricas como *recall*, F1 y PR-AUC, además de un *baseline*.
 - **Fuente oficial y abierta:** proviene de una entidad pública, con licencia clara, diccionario y metadata, lo que garantiza trazabilidad y reproducibilidad.
 - **Utilidad real:** el problema tiene aplicación directa en la gestión de la capacitación del servicio civil.
+
+## 9. Población y datos preparados del TP1
+
+El análisis selecciona 36 681 participaciones de 198 ediciones con evaluación. Se conservan 34 511 aprobados, 2 060 desaprobados y 110 retirados; prevalencia positiva 5,92 %. Las 47 249 participaciones de solo asistencia quedan fuera de esta población. El régimen se infiere de resultados históricos: no equivale a metadata confirmada de inscripción.
+
+El CSV limpio tiene 22 columnas con roles distintos; diez son predictoras candidatas. Se excluyen identificadores, estado final y duración en días de las entradas. Train contiene 29 336 filas / 158 ediciones, test 7 345 / 40; la validación usa cinco folds dentro de train. Hay 17 nombres de cursos presentes en ambos conjuntos y diferencias de composición por tipos de capacitación.
+
+La ventana del reporte no coincide con todas las fechas de inicio: el archivo contiene inicios desde febrero de 2025. Se corrigieron y marcaron 1 498 fechas de término en 2015 mediante una regla temporal plausible; esa corrección no está confirmada por el publicador.

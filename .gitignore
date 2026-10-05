@@ -31,4 +31,4 @@ optuna.db
 
 # --- Modelos pesados (descomenta si los regeneras con el pipeline) ---
 # models/*.pkl
-# models/*.joblib
+models/*.joblib
