@@ -29,7 +29,6 @@ Las diapositivas son material de referencia, no una dependencia de ejecución de
 | Selección | AP media entre folds | Prioriza ranking de casos raros | Accuracy / escoger con test: no representan el objetivo o contaminan la evaluación |
 | Umbral | Máximo F1 OOF de train | Criterio preliminar explícito sin costos institucionales inventados | Elegir con test: daría una evaluación optimista |
 | Evidencia | cross_validate, CSV, JSON y notebooks ejecutados | Media, desviación, configuración y resultados verificables | Una sola métrica sin interpretación: insuficiente según enunciado |
-| Presentación | PDF generado con matplotlib | Exportable, reproducible y sin dependencia de una cuenta externa | PowerPoint manual: puede editarse después, pero no es necesario para el entregable PDF |
 
 ## Parámetros fijados antes del test
 
