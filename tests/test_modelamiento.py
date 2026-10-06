@@ -1,14 +1,33 @@
 """Comprobaciones de comportamiento del pipeline, sin depender del CSV real."""
 
-import sys
+import ast
+import json
 from pathlib import Path
 import unittest
 
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from src.modelamiento import construir_modelos, metricas, seleccionar_umbral
+NOTEBOOK = Path(__file__).resolve().parents[1] / "notebooks/04_modelamiento.ipynb"
+contenido = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
+nodos = []
+for celda in contenido["cells"]:
+    if celda["cell_type"] != "code":
+        continue
+    for nodo in ast.parse("".join(celda["source"])).body:
+        if isinstance(nodo, (ast.Import, ast.ImportFrom, ast.FunctionDef)):
+            nodos.append(nodo)
+        elif isinstance(nodo, ast.Assign) and any(
+            isinstance(destino, ast.Name) and destino.id in {"SEMILLA", "NUMERICAS", "METRICAS"}
+            for destino in nodo.targets
+        ):
+            nodos.append(nodo)
+# Cargar definiciones sin llamar a las celdas que entrenan con los datos reales.
+espacio = {}
+exec(compile(ast.Module(body=nodos, type_ignores=[]), str(NOTEBOOK), "exec"), espacio)
+construir_modelos = espacio["construir_modelos"]
+metricas = espacio["metricas"]
+seleccionar_umbral = espacio["seleccionar_umbral"]
 
 
 class PipelineTests(unittest.TestCase):

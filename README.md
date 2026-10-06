@@ -57,7 +57,6 @@ El TP1 compara un baseline y tres modelos preliminares con validación por edici
 | [Dataset y procedencia](docs/dataset-y-procedencia.md) | Fuente, diccionario, licencia y población |
 | [Decisiones de herramientas](docs/decisiones-herramientas.md) | Elecciones y alternativas, vinculadas a semanas 3, 5 y 6 |
 | [Resultados y plan hacia el TF1](docs/plan-hacia-tf1.md) | Métricas ejecutadas, interpretación y pendientes |
-| [Uso de IA generativa](docs/uso-ia-generativa.md) | Alcance del apoyo técnico y responsabilidad |
 
 ## Estructura y orden de ejecución
 
@@ -71,15 +70,10 @@ Data_mining/
 │   ├── 03_separacion_datos.ipynb     # train/test y cinco folds por edición
 │   └── 04_modelamiento.ipynb        # pipeline, baseline, modelos y evaluación
 ├── src/
-│   ├── utils/download_data.py       # descarga con respaldo y hash
-│   ├── modelamiento.py              # funciones reutilizables
-│   ├── ejecutar_notebooks.py        # ejecución con salidas visibles
-│   └── generar_entrega.py           # cierre, presentación PDF y guion
+│   └── utils/download_data.py       # descarga con respaldo y hash
 ├── models/                          # pipeline regenerable, fuera de git
 ├── reports/figures/                 # gráficos del análisis y evaluación
 ├── reports/metrics/                 # tablas CV/test y configuración
-├── reports/presentacion_tp1.pdf
-├── reports/guion_tp1.md
 ├── docs/
 ├── tests/
 └── requirements.txt
@@ -101,21 +95,9 @@ jupyter notebook notebooks/
 
 Ejecutar los notebooks **01 → 02 → 03 → 04**, reiniciando el kernel y ejecutando todas las celdas en orden. En Windows se activa con `.venv\Scripts\Activate.ps1`.
 
-Para reproducir el flujo y regenerar la entrega desde terminal:
+En Jupyter, abrir cada notebook y seleccionar **Kernel → Restart Kernel and Run All Cells** (reiniciar y ejecutar todas las celdas). Guardar el notebook al finalizar para conservar tablas y gráficos. Todo el código de modelamiento está en el notebook 04; no requiere scripts adicionales. El Random Forest usa dos trabajadores.
 
-```bash
-python src/ejecutar_notebooks.py
-python src/generar_entrega.py
-```
-
-El ejecutor utiliza IPython en el mismo proceso y guarda tablas, figuras y resultados en los notebooks, sin abrir un servidor. Respeta el código de las celdas. La ejecución tarda según el equipo; el forest usa dos trabajadores.
-
-Para ejecutar solo modelamiento, una vez generados train y test:
-
-```bash
-python src/ejecutar_notebooks.py notebooks/04_modelamiento.ipynb
-python src/generar_entrega.py
-```
+Para ejecutar solo el notebook 04, deben existir los archivos de train, test y roles generados por los notebooks 02 y 03.
 
 Comprobaciones de comportamiento del pipeline:
 
@@ -155,7 +137,6 @@ El pipeline exportado recibe las diez columnas preparadas; no incluye toda la li
 - [x] Punto 9: evaluación preliminar e interpretación.
 - [x] Punto 10: hallazgos, limitaciones y plan TF1.
 - [x] Cuatro notebooks ejecutados, README y dependencias.
-- [x] [Presentación PDF](reports/presentacion_tp1.pdf) y [guion de 10 minutos](reports/guion_tp1.md).
 
 Los integrantes deben revisar las conclusiones, comprender el código, ensayar y proporcionar acceso al repositorio al docente. Esos pasos académicos no se sustituyen por la generación de archivos.
 

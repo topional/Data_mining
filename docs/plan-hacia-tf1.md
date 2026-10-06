@@ -4,7 +4,6 @@
 
 Se completaron problema, procedencia, EDA, calidad, separación por edición, pipeline, baseline,
 tres alternativas de clasificación y evaluación preliminar. Los cuatro notebooks están ejecutados.
-La presentación y su guion están en `reports/`.
 
 Este corte no es un despliegue ni una validación institucional. La utilidad del seguimiento debe
 discutirse con responsables de capacitación; no se declara éxito solo por superar un baseline.
@@ -102,8 +101,7 @@ No se trata como prueba de equidad ni se modifica el modelo usando ese diagnóst
 ## Reproducibilidad y evidencia
 
 - `notebooks/04_modelamiento.ipynb`: ejecución, gráficos e interpretación.
-- `src/modelamiento.py`: pipelines, métricas, OOF y exportación.
+- `notebooks/04_modelamiento.ipynb`: incluye el código de pipelines, métricas, OOF y exportación.
 - `reports/metrics/`: resultados por fold, resumen, test, segmentos y selección.
 - `data/processed/`: particiones y predicciones detalladas, regenerables y fuera de git.
 - `models/modelo_tp1.joblib`: pipeline y umbral, regenerable y fuera de git.
-- `src/generar_entrega.py`: genera este cierre y la presentación a partir de resultados reales.
