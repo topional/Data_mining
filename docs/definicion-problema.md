@@ -32,6 +32,8 @@ Un mismo servidor puede aparecer en más de una capacitación, pero su documento
 
 Aquí, **riesgo** significa pertenecer a la clase positiva definida en la sección 5: `DESAPROBADO` o `RETIRADO`.
 
+**Población fijada para el TP1:** participaciones en ediciones con evaluación. El CSV original tiene 83 930 filas; los notebooks 01–02 excluyen 47 249 participaciones acreditadas solo por asistencia y conservan 36 681 filas de 198 ediciones, con 2 170 positivos (5,92 %). En esta población `y = 0` equivale a `APROBADO`. El régimen se infiere de estados históricos y debe confirmarse con metadata disponible al inscribirse. Los resultados del modelo no se extienden automáticamente a eventos de asistencia.
+
 Preguntas secundarias que guiarán el EDA:
 
 1. ¿Qué proporción de participantes culmina satisfactoriamente (aprueba o asiste) y qué proporción cae en riesgo (desaprueba o se retira), y cómo varía según el tipo de capacitación, la modalidad y el nivel de gobierno?
@@ -46,7 +48,7 @@ Preguntas secundarias que guiarán el EDA:
 | Variable original           | `ESTADO_CAPACITACION` (4 categorías) |
 | Variable objetivo           | Variable binaria derivada `y` |
 | Clase de interés (positiva) | `y = 1`: el servidor **no culmina satisfactoriamente** |
-| Desafío principal           | **Desbalance muy severo de clases** (≈ 97.4 % / 2.6 %) |
+| Desafío principal           | **Desbalance de clases** (94,08 % / 5,92 % en la población evaluable; 97,41 % / 2,59 % en el original) |
 | Variables predictoras       | Solo las conocidas **al momento de la inscripción** (perfil del participante y características de la capacitación) |
 
 ### Definición de la variable objetivo
@@ -75,13 +77,13 @@ Que SERVIR y las entidades responsables de la capacitación cuenten con una herr
 - **Estimar el riesgo** de no culminar satisfactoriamente una capacitación, para apoyar decisiones de seguimiento o acompañamiento.
 - **Identificar factores asociados** a ese riesgo (por ejemplo, modalidad o duración), para revisar el diseño de la oferta.
 
-La salida del modelo es una **probabilidad o alerta de riesgo**, no una decisión automática sobre las personas.
+La salida preliminar es un **score y una alerta de riesgo**. Los modelos con pesos de clase no están calibrados: el score no se interpreta como probabilidad absoluta individual. No es una decisión automática sobre las personas; la calibración y la política de acompañamiento quedan para el TF1.
 
 ## 7. Criterios bajo los cuales se considerará útil el resultado
 
 ### Por qué el *accuracy* no basta
 
-Como aproximadamente el 97.4% de los participantes pertenece a la clase 0 (sin riesgo), un modelo muy simple que siempre predice “no riesgo” alcanzaría alrededor de 97.4% de exactitud **(accuracy)**, aunque no identificaría a ningún participante en riesgo. Por ello, se incluirá este modelo simple como punto de comparación **(baseline)**. Su objetivo es mostrar que la exactitud puede ser una medida engañosa cuando una clase es mucho más frecuente que la otra.
+En el archivo original aproximadamente el 97,4 % pertenece a la clase 0; en la población evaluable, el 94,08 %. Por tanto, un modelo muy simple que siempre predice “no riesgo” alcanzaría alrededor de 94,08 % de exactitud en la población evaluable **(accuracy)**, aunque no identificaría a ningún participante en riesgo. Por ello, se incluirá este modelo simple como punto de comparación **(baseline)**. Su objetivo es mostrar que la exactitud puede ser una medida engañosa cuando una clase es mucho más frecuente que la otra.
 
 Para evaluar el desempeño real del modelo se dará especial atención a su capacidad para identificar los casos de riesgo, y no solo a la proporción total de aciertos.
 
@@ -99,7 +101,7 @@ Se evaluará principalmente la capacidad del modelo para identificar a los parti
 
 - F1 de la clase positiva: resume el equilibrio entre recall y precision.
 
-- PR-AUC: resume el desempeño del modelo al comparar la proporción de alertas correctas y la proporción de casos de riesgo detectados bajo distintos niveles de alerta.
+- Average Precision (AP), resumen de la curva precision–recall: resume el desempeño del modelo al comparar la proporción de alertas correctas y la proporción de casos de riesgo detectados bajo distintos niveles de alerta.
 
 - Balanced accuracy: resume el desempeño considerando por igual a los participantes con riesgo y sin riesgo; evita que la clase mayoritaria tenga demasiado peso en la evaluación.
 
@@ -113,6 +115,10 @@ El proyecto **no pretende**:
 - evaluar o sancionar a personas ni a entidades
 - generalizar a otras capacitaciones, años o instituciones distintas a las del dataset.
 
-Con las variables disponibles (no hay edad, cargo, antigüedad ni nivel educativo) y una clase positiva de solo ~2.6 %, es posible que el poder predictivo sea **limitado**. El proyecto reportará con honestidad cuánto mejora el modelo frente al baseline y qué no puede concluirse.
+Con las variables disponibles (no hay edad, cargo, antigüedad ni nivel educativo) y una clase positiva de ~5,9 % en la población evaluable, es posible que el poder predictivo sea **limitado**. El proyecto reportará con honestidad cuánto mejora el modelo frente al baseline y qué no puede concluirse.
 
 Variables como sexo o ubicación son sensibles: se incluirán para analizar posibles diferencias entre grupos, pero se revisará el desempeño del modelo por segmento para no reproducir ni amplificar sesgos.
+
+## 9. Evaluación del TP1
+
+El notebook 04 compara DummyClassifier, regresión logística, árbol de decisión y random forest con los cinco folds por edición guardados. Se selecciona por AP media y se fija el umbral con F1 OOF de train. La métrica OOF ajustada es desarrollo, no una evaluación independiente; el test se utiliza después de congelar la decisión. Resultados y límites en [plan-hacia-tf1.md](plan-hacia-tf1.md).

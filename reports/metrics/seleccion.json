@@ -1,0 +1,49 @@
+{
+  "modelo": "Random forest",
+  "umbral": 0.6393694426502085,
+  "criterio_modelo": "mayor AP media de CV por edición",
+  "criterio_umbral": "máximo F1 de predicciones OOF de train",
+  "advertencia": "Umbral y modelo elegidos con validación: OOF ajustada es desarrollo, no evaluación independiente.",
+  "semilla": 42,
+  "predictoras": [
+    "DEPARTAMENTO",
+    "SEXO",
+    "NIVEL_GOBIERNO",
+    "TRABAJA_ENTIDAD_PUBLICA",
+    "TIPO_CAPACITACION",
+    "MODALIDAD",
+    "TIPO_CONVOCATORIA",
+    "HORAS_ACADEMICAS",
+    "MES_INICIO",
+    "ANIO_INICIO"
+  ],
+  "versiones": {
+    "python": "3.14.7",
+    "scikit-learn": "1.9.1",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "joblib": "1.6.0"
+  },
+  "parametros_clasificador": {
+    "bootstrap": true,
+    "ccp_alpha": 0.0,
+    "class_weight": "balanced_subsample",
+    "criterion": "gini",
+    "max_depth": 10,
+    "max_features": "sqrt",
+    "max_leaf_nodes": null,
+    "max_samples": null,
+    "min_impurity_decrease": 0.0,
+    "min_samples_leaf": 20,
+    "min_samples_split": 2,
+    "min_weight_fraction_leaf": 0.0,
+    "monotonic_cst": null,
+    "n_estimators": 150,
+    "n_jobs": 2,
+    "oob_score": false,
+    "random_state": 42,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "calibracion": "No calibrado; class_weight y selección de umbral impiden asumir probabilidades calibradas."
+}
