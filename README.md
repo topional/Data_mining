@@ -154,8 +154,6 @@ El pipeline exportado recibe las diez columnas preparadas; no incluye toda la li
 - [x] Punto 10: hallazgos, limitaciones y plan TF1.
 - [x] Cuatro notebooks ejecutados, README y dependencias.
 
-Los integrantes deben revisar las conclusiones, comprender el código, ensayar y proporcionar acceso al repositorio al docente. Esos pasos académicos no se sustituyen por la generación de archivos.
-
 ## Limitaciones principales
 
 Población inferida de estados finales; identidades enmascaradas; EDA y decisiones administrativas con observación del dataset completo; 17 nombres de curso compartidos entre train/test; composición distinta por tipos; solo 110 retirados; scores no calibrados; falta validación temporal e institucional. Las asociaciones e importancias no son causas. Detalle y mejoras en el plan TF1.
