@@ -79,11 +79,13 @@ Data_mining/
 └── requirements.txt
 ```
 
-## Ejecutar en Arch Linux / Linux / macOS
+## Ejecutar en Windows / Linux
 
 Se ejecutó y verificó con **Python 3.14.7**, scikit-learn 1.9.1 y pandas 3.0.6. Los notebooks originales se desarrollaron con Python 3.13. Se necesita internet para instalar dependencias y descargar los datos; después se trabaja localmente.
 
-Desde la raíz del repositorio `Data_mining`:
+Abrir una terminal en la raíz del repositorio `Data_mining`. Python debe estar instalado.
+
+### Linux (Bash)
 
 ```bash
 python -m venv .venv
@@ -93,7 +95,17 @@ python src/utils/download_data.py
 jupyter notebook notebooks/
 ```
 
-Ejecutar los notebooks **01 → 02 → 03 → 04**, reiniciando el kernel y ejecutando todas las celdas en orden. En Windows se activa con `.venv\Scripts\Activate.ps1`.
+### Windows (Símbolo del sistema / CMD)
+
+```bat
+py -m venv .venv
+.venv\Scripts\activate.bat
+python -m pip install -r requirements.txt
+python src/utils/download_data.py
+jupyter notebook notebooks/
+```
+
+Ejecutar los notebooks **01 → 02 → 03 → 04**, reiniciando el kernel y ejecutando todas las celdas en orden.
 
 En Jupyter, abrir cada notebook y seleccionar **Kernel → Restart Kernel and Run All Cells** (reiniciar y ejecutar todas las celdas). Guardar el notebook al finalizar para conservar tablas y gráficos. Todo el código de modelamiento está en el notebook 04; no requiere scripts adicionales. El Random Forest usa dos trabajadores.
 
@@ -130,7 +142,11 @@ El pipeline exportado recibe las diez columnas preparadas; no incluye toda la li
 
 ## Entregables y estado
 
-- [x] Puntos 1–5: problema, fuente, EDA, calidad y separación.
+- [x] Punto 1: definición del problema, objetivo y variable a predecir.
+- [x] Punto 2: selección del dataset, procedencia y descripción de las variables.
+- [x] Punto 3: análisis exploratorio de datos (EDA), distribuciones y relaciones.
+- [x] Punto 4: revisión de calidad y preparación de los datos.
+- [x] Punto 5: separación de entrenamiento y prueba, y cinco folds de validación por edición.
 - [x] Punto 6: flujo reproducible de preparación y clasificación.
 - [x] Punto 7: baseline ejecutado.
 - [x] Punto 8: al menos dos modelos (se comparan tres).
